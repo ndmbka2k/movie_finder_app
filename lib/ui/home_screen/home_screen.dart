@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Stack(
         children: [
           Container(
-            width: 428,
+            width: 428.h,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color(0xff2b5876), Color(0xff4e4376)],
@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 64, vertical: 20),
+                      EdgeInsets.symmetric(horizontal: 64.w, vertical: 20.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Container(
-                  height: 50,
+                  height: 50.h,
                   margin: EdgeInsets.only(left: 52.w, bottom: 27.h),
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -174,8 +174,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           margin: EdgeInsets.zero,
                           alignment: Alignment.bottomCenter,
                           builder: DotSwiperPaginationBuilder(
-                            activeSize: 8,
-                            size: 8,
+                            activeSize: 8.r,
+                            size: 8.r,
                             color: Colors.grey,
                             activeColor: Colors.red,
                           ),
@@ -223,12 +223,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             alignment: Alignment.topCenter,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(30.r),
-                              child: Image(
-                                image: CachedNetworkImageProvider(
-                                    'https://image.tmdb.org/t/p/original/${newMovie!.movies[index].posterPath}'),
-                                fit: BoxFit.fill,
-                                height: 215.h,
-                                width: 145.w,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return DetailScreen(
+                                          movieId: state.newReleaseMovie!
+                                              .movies[index].id,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Image(
+                                  image: CachedNetworkImageProvider(
+                                      'https://image.tmdb.org/t/p/original/${newMovie!.movies[index].posterPath}'),
+                                  fit: BoxFit.fill,
+                                  height: 215.h,
+                                  width: 145.w,
+                                ),
                               ),
                             ),
                           );
@@ -252,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Positioned(
-            bottom: 0,
+            bottom: 0.h,
             child: CustomNavigationBar(),
           )
         ],

@@ -93,9 +93,12 @@ class _DetailScreenState extends State<DetailScreen> {
                   builder: (context, state) {
                     return Column(
                       children: [
-                        Text(
-                          state.currentMovie?.movieTitle ?? '',
-                          style: textStyleBold,
+                        Image.asset(AppIcon.strikethrough),
+                        Center(
+                          child: Text(
+                            state.currentMovie?.movieTitle ?? '',
+                            style: textStyleBold,
+                          ),
                         ),
                         Text(
                           state.currentMovie?.tagline ?? '',
@@ -170,33 +173,6 @@ class _DetailScreenState extends State<DetailScreen> {
                         SizedBox(
                           height: 17.h,
                         ),
-                        // RichText(
-                        //   textAlign: TextAlign.start,
-                        //   text: TextSpan(
-                        //     text: 'Hello',
-                        //     style: TextStyle(
-
-                        //     ),
-                        //     children: [
-                        //       TextSpan(
-                        //         text:
-                        //             'When the Dark Elves attempt to plunge the universe into darkness, Thor must embark on a perilous and personal journey that will reunite him with doctor Jane ... ',
-                        //         style: textStyleRegular.copyWith(
-                        //           fontSize: 12,
-                        //           color: Color(0xffffffff).withOpacity(0.75),
-                        //         ),
-                        //       ),
-                        //       TextSpan(
-                        //         text: 'More',
-                        //         style: TextStyle(
-                        //           color: Color(0xffA1F3FE),
-                        //           fontSize: 12.sp,
-                        //           fontWeight: FontWeight.w500,
-                        //         ),
-                        //       )
-                        //     ],
-                        //   ),
-                        // ),
                         ReadMoreText(
                           state.currentMovie?.overview ?? '',
                           trimLines: 3,
@@ -245,6 +221,13 @@ class _DetailScreenState extends State<DetailScreen> {
                   },
                 ),
               ),
+            ),
+            Positioned(
+              child: InkWell(
+                  onTap: (() => Navigator.pop(context)),
+                  child: Image.asset(AppIcon.back_icon)),
+              left: 50.w,
+              top: 50.h,
             ),
           ],
         ),

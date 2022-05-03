@@ -17,6 +17,8 @@ class AppIcon {
   static const favorite_solid = 'assets/icons/favorite_solid.png';
 
   static const imdb = 'assets/icons/imdb.png';
+  static const back_icon = 'assets/icons/back_icon.png';
+  static const strikethrough = 'assets/icons/strikethrough.png';
 }
 
 class AppImage {

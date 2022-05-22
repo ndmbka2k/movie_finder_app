@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_finder_app/bloc/collection_movie/collection_movie_state.dart';
+import 'package:movie_finder_app/models/load_status.dart';
 import 'package:movie_finder_app/repository/movie_repository.dart';
 
 class CollectionMovieCubit extends Cubit<CollectionMovieState> {
@@ -18,12 +19,24 @@ class CollectionMovieCubit extends Cubit<CollectionMovieState> {
     }
   }
 
-  void getDetaileMovie(String id) async {
+  void getDetaileMovie({String id = ''}) async {
     try {
+      emit(state.copyWith(loadingStatus: LoadingStatus.LOADING));
       var movie = await movieRepo.getDetaileMovie(id);
-      emit(state.copyWith(currentMovie: movie));
+      var credit = await movieRepo.getDetaileMovieCredit(id);
+      emit(
+        state.copyWith(
+          currentMovie: movie,
+          movieCredit: credit,
+          loadingStatus: LoadingStatus.LOADED,
+        ),
+      );
     } catch (e) {
       print(e);
     }
+  }
+
+  void gettingData() {
+    emit(state.copyWith(loadingStatus: LoadingStatus.LOADING));
   }
 }

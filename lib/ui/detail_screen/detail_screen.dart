@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movie_finder_app/models/load_status.dart';
+import 'package:movie_finder_app/ui/detail_screen/video_player/custom_video_player.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:sticky_headers/sticky_headers.dart';
+
 import 'package:movie_finder_app/bloc/collection_movie/collection_movie_cubit.dart';
 import 'package:movie_finder_app/bloc/collection_movie/collection_movie_state.dart';
 import 'package:movie_finder_app/constants/colors/colors.dart';
 import 'package:movie_finder_app/constants/images/images.dart';
-import 'package:movie_finder_app/models/movie.dart';
-import 'package:movie_finder_app/ui/home_screen/home_screen.dart';
+
 import 'package:readmore/readmore.dart';
 
 class DetailScreen extends StatefulWidget {
   final String movieId;
-  const DetailScreen({Key? key, required this.movieId}) : super(key: key);
+  const DetailScreen({
+    Key? key,
+    required this.movieId,
+  }) : super(key: key);
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -25,7 +32,8 @@ class _DetailScreenState extends State<DetailScreen> {
     // TODO: implement initState
     super.initState();
     _cubit = BlocProvider.of<CollectionMovieCubit>(context);
-    _cubit.getDetaileMovie(widget.movieId);
+    _cubit.gettingData();
+    _cubit.getDetaileMovie(id: widget.movieId);
   }
 
   @override
@@ -54,7 +62,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
               child: BlocBuilder<CollectionMovieCubit, CollectionMovieState>(
                 buildWhen: (previous, current) =>
-                    previous.currentMovie != current.currentMovie,
+                    previous.loadingStatus != current.loadingStatus,
                 builder: (context, state) {
                   return state.currentMovie == null
                       ? Container()
@@ -67,165 +75,228 @@ class _DetailScreenState extends State<DetailScreen> {
                 },
               ),
             ),
-            SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.only(top: 490.h),
-                height: 926.h,
-                width: 428.w,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xff2b5876),
-                      Color(0xff4e4376),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                      50.r,
+            DraggableScrollableSheet(
+                initialChildSize: 0.5,
+                minChildSize: 0.5,
+                maxChildSize: 0.7,
+                builder: ((context, scrollController) {
+                  return Container(
+                    // margin: EdgeInsets.only(top: 400.h),
+                    // height: 926.h,
+                    width: 428.w,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xff2b5876),
+                          Color(0xff4e4376),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(
+                          50.r,
+                        ),
+                        topRight: Radius.circular(50.r),
+                      ),
                     ),
-                    topRight: Radius.circular(50.r),
-                  ),
-                ),
-                padding: EdgeInsets.only(top: 30.h, left: 50.w, right: 50.w),
-                child: BlocBuilder<CollectionMovieCubit, CollectionMovieState>(
-                  buildWhen: (previous, current) =>
-                      previous.currentMovie != current.currentMovie,
-                  builder: (context, state) {
-                    return Column(
-                      children: [
-                        Image.asset(AppIcon.strikethrough),
-                        Center(
-                          child: Text(
-                            state.currentMovie?.movieTitle ?? '',
-                            style: textStyleBold,
-                          ),
-                        ),
-                        Text(
-                          state.currentMovie?.tagline ?? '',
-                          style: textStyleBold.copyWith(
-                            fontSize: 18.sp,
-                            color: Color(0xffffffff).withOpacity(0.5),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 27.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: state.currentMovie == null
-                                      ? []
-                                      : (state.currentMovie?.genres ?? [])
-                                          .map((e) {
-                                          return MovieGenre(
-                                              title: e.toString());
-                                        }).toList(),
+                    padding:
+                        EdgeInsets.only(top: 30.h, left: 50.w, right: 50.w),
+                    child:
+                        BlocBuilder<CollectionMovieCubit, CollectionMovieState>(
+                      buildWhen: (previous, current) =>
+                          previous.currentMovie != current.currentMovie,
+                      builder: (context, state) {
+                        return SingleChildScrollView(
+                          controller: scrollController,
+                          child: Column(
+                            children: [
+                              Image.asset(AppIcon.strikethrough),
+                              Center(
+                                child: Text(
+                                  state.currentMovie?.movieTitle ?? '',
+                                  style: textStyleBold,
                                 ),
-                                Container(
-                                  width: 73.w,
-                                  height: 23.h,
-                                  padding:
-                                      EdgeInsets.only(left: 6.5.w, right: 10.w),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xfff5c518),
-                                    borderRadius: BorderRadius.circular(15.r),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Color(0x4000000000),
-                                        blurRadius: 15.r,
-                                        offset: Offset(4, 4),
-                                      )
-                                    ],
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                              ),
+                              Text(
+                                state.currentMovie?.tagline ?? '',
+                                style: textStyleBold.copyWith(
+                                  fontSize: 18.sp,
+                                  color: Color(0xffffffff).withOpacity(0.5),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 27.h,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Image.asset(AppIcon.imdb),
-                                      Text(
-                                        '8.5',
-                                        style: textStyleBold.copyWith(
-                                          fontSize: 12,
-                                          color: Color(0xff000000),
+                                      Row(
+                                        children: state.currentMovie == null
+                                            ? []
+                                            : (state.currentMovie?.genres ?? [])
+                                                .map((e) {
+                                                return MovieGenre(
+                                                    title: e.toString());
+                                              }).toList(),
+                                      ),
+                                      Container(
+                                        width: 73.w,
+                                        height: 23.h,
+                                        padding: EdgeInsets.only(
+                                            left: 6.5.w, right: 10.w),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xfff5c518),
+                                          borderRadius:
+                                              BorderRadius.circular(15.r),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Color(0x4000000000),
+                                              blurRadius: 15.r,
+                                              offset: Offset(4, 4),
+                                            )
+                                          ],
                                         ),
-                                      )
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Image.asset(AppIcon.imdb),
+                                            Text(
+                                              '8.5',
+                                              style: textStyleBold.copyWith(
+                                                fontSize: 12,
+                                                color: Color(0xff000000),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.asset(AppIcon.share),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Image.asset(AppIcon.favorite_solid),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 17.h,
+                              ),
+                              ReadMoreText(
+                                state.currentMovie?.overview ?? '',
+                                trimLines: 3,
+                                trimMode: TrimMode.Line,
+                                colorClickableText: Color(0xffA6A1E0),
+                                trimExpandedText: 'Less',
+                                trimCollapsedText: 'More',
+                                style: TextStyle(
+                                  color: Color(0xffffffff).withOpacity(0.75),
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Image.asset(AppIcon.share),
-                                SizedBox(
-                                  width: 10.w,
+                              ),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Cast',
+                                    style:
+                                        textStyleBold.copyWith(fontSize: 18.sp),
+                                  ),
+                                  Text(
+                                    'See All',
+                                    style: textStyleMedium,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 16.h,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: AppImage.actor.map((e) {
+                                  return ActorCard(
+                                    textStyle: textStyleRegular,
+                                    image: e[0],
+                                    actorName: e[1],
+                                    charName: e[2],
+                                  );
+                                }).toList(),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                child: Text(
+                                  'Videos',
+                                  style:
+                                      textStyleBold.copyWith(fontSize: 18.sp),
                                 ),
-                                Image.asset(AppIcon.favorite_solid),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 17.h,
-                        ),
-                        ReadMoreText(
-                          state.currentMovie?.overview ?? '',
-                          trimLines: 3,
-                          trimMode: TrimMode.Line,
-                          colorClickableText: Color(0xffA6A1E0),
-                          trimExpandedText: 'Less',
-                          trimCollapsedText: 'More',
-                          style: TextStyle(
-                            color: Color(0xffffffff).withOpacity(0.75),
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              state.loadingStatus == LoadingStatus.LOADING
+                                  ? Container()
+                                  : Stack(
+                                      children: [
+                                        Image.network(
+                                          'https://image.tmdb.org/t/p/original/${state.currentMovie!.backdropPath}',
+                                          fit: BoxFit.fill,
+                                        ),
+                                        Positioned(
+                                          left: 0,
+                                          right: 0,
+                                          bottom: 0,
+                                          top: 0,
+                                          child: InkWell(
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (ctx) => AlertDialog(
+                                                  insetPadding: EdgeInsets.zero,
+                                                  contentPadding:
+                                                      EdgeInsets.zero,
+                                                  content: CustomVideoPlayer(
+                                                    videoId:
+                                                        'https://www.youtube.com/watch?v=${state.movieCredit!.getKey()}',
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Icon(
+                                              Icons.play_circle_fill_outlined,
+                                              color: Colors.yellow,
+                                              size: 50,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                            ],
                           ),
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Cast',
-                              style: textStyleBold.copyWith(fontSize: 18.sp),
-                            ),
-                            Text(
-                              'See All',
-                              style: textStyleMedium,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 16.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: AppImage.actor.map((e) {
-                            return ActorCard(
-                              textStyle: textStyleRegular,
-                              image: e[0],
-                              actorName: e[1],
-                              charName: e[2],
-                            );
-                          }).toList(),
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ),
+                        );
+                      },
+                    ),
+                  );
+                })),
             Positioned(
               child: InkWell(
-                  onTap: (() => Navigator.pop(context)),
-                  child: Image.asset(AppIcon.back_icon)),
+                onTap: (() => Navigator.pop(context)),
+                child: Image.asset(AppIcon.back_icon),
+              ),
               left: 50.w,
               top: 50.h,
             ),

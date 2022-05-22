@@ -14,7 +14,11 @@ class MovieRepo {
     return await apiClient.getNewMovie();
   }
 
-  Future<Movie> getDetaileMovie(String id) async {
-    return await apiClient.getDetaileMovie(id);
+  Future<Movie?> getDetaileMovie(String id) async {
+    return await apiClient.getDetaileMovie(id: id);
+  }
+
+  Future<MovieCredit> getDetaileMovieCredit(String id) async {
+    return await apiClient.getDetaileMovieCredit(id);
   }
 }

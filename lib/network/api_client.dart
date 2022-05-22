@@ -31,7 +31,7 @@ class ApiClient {
     } finally {}
   }
 
-  Future<Movie> getDetaileMovie(String id) async {
+  Future<Movie?> getDetaileMovie({String? id}) async {
     try {
       var response = await client.get(Uri.parse(
           'https://api.themoviedb.org/3/movie/$id?api_key=26763d7bf2e94098192e629eb975dab0'));
@@ -40,6 +40,21 @@ class ApiClient {
       var movie = Movie.fromJson(decodedResponse as Map<String, dynamic>);
 
       return movie;
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  Future<MovieCredit> getDetaileMovieCredit(String id) async {
+    try {
+      var response = await client.get(Uri.parse(
+          'https://api.themoviedb.org/3/movie/$id/videos?api_key=26763d7bf2e94098192e629eb975dab0'));
+      Map<dynamic, dynamic> decodedResponse =
+          jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+      var credit =
+          MovieCredit.fromJson(decodedResponse as Map<String, dynamic>);
+
+      return credit;
     } finally {}
   }
 }

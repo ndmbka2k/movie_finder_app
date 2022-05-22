@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CategoryButton extends StatelessWidget {
   const CategoryButton({
@@ -13,11 +14,11 @@ class CategoryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 95,
-      width: 69,
-      padding: EdgeInsets.only(top: 26, bottom: 14),
+      height: 100.h,
+      width: 69.w,
+      padding: EdgeInsets.only(top: 26.h, bottom: 14.h),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15.r),
         border: Border.all(
           width: 1,
           color: Color(0x4cffffff),
@@ -34,7 +35,7 @@ class CategoryButton extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: 9,
+              fontSize: 9.sp,
               color: Color(0xffffffff),
             ),
           ),

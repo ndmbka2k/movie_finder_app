@@ -7,7 +7,9 @@ import 'package:movie_finder_app/bloc/collection_movie/collection_movie_state.da
 import 'package:movie_finder_app/constants/images/images.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movie_finder_app/ui/detail_screen/detail_screen.dart';
+import 'package:movie_finder_app/ui/detail_screen/detail_screen1.dart';
 
+import '../detail_screen/detai.dart';
 import 'components/categpry_button.dart';
 import 'components/section_title.dart';
 
@@ -31,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Container(
@@ -153,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onTap: () {
                                   Navigator.of(context).push(
                                       MaterialPageRoute(builder: (context) {
-                                    return DetailScreen(
+                                    return Detail(
                                         movieId: popular!.movies[index].id);
                                   }));
                                 },

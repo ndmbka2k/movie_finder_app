@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movie_finder_app/bloc/collection_movie/collection_movie_cubit.dart';
-import 'package:movie_finder_app/bloc/collection_movie/collection_movie_state.dart';
-import 'package:movie_finder_app/models/movie.dart';
+
 import 'package:movie_finder_app/network/api_client.dart';
 import 'package:movie_finder_app/network/api_ulti.dart';
 import 'package:movie_finder_app/repository/movie_repository.dart';
-import 'package:movie_finder_app/ui/detail_screen/detail_screen.dart';
 import 'package:movie_finder_app/ui/home_screen/home_screen.dart';
 
 void main() {
